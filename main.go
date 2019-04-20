@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 
 	. "./fileio"
@@ -13,17 +12,13 @@ import (
 )
 
 func main() {
-	args := os.Args[1:]
-	if len(args) < 1 {
-		fmt.Println("Usage: rss-dl [FEED_URL]")
-		return
-	}
+	GetConfig()
 
 	fp := gofeed.NewParser()
-	LogInfo("Downloading " + args[0])
-	feed, _ := fp.ParseURL(args[0])
+	LogInfo("Downloading " + Config.FeedURL)
+	feed, _ := fp.ParseURL(Config.FeedURL)
 
-	outputDir := ToCleanString(feed.Title)
+	outputDir := Config.OutputPath + "/" + ToCleanString(feed.Title)
 	InitOutputDirectory(outputDir)
 
 	feedInfoPath := outputDir + "/feed_details.json"

@@ -29,7 +29,7 @@ func WriteToFile(filename string, content string) {
 // InitOutputDirectory - Creates output directory
 func InitOutputDirectory(path string) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.Mkdir(path, os.ModePerm)
+		os.MkdirAll(path, os.ModePerm)
 	}
 }
 
