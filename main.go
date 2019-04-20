@@ -20,29 +20,43 @@ func main() {
 	}
 
 	fp := gofeed.NewParser()
+	LogInfo("Downloading " + args[0])
 	feed, _ := fp.ParseURL(args[0])
 
 	outputDir := ToCleanString(feed.Title)
 	InitOutputDirectory(outputDir)
 
-	WriteToFile(outputDir+"/feed_details.json", GrabFeedDetailsJSON(feed))
+	feedInfoPath := outputDir + "/feed_details.json"
+	LogInfo("Writing feed details as JSON to " + feedInfoPath)
+	WriteToFile(feedInfoPath, GrabFeedDetailsJSON(feed))
+
 	for _, item := range feed.Items {
 		itemOutputFilename := ToCleanString(
 			item.PublishedParsed.Format("20060102") + "_" + item.Title)
 		itemOutputDir := outputDir + "/" + itemOutputFilename
 
 		if CheckIfExists(itemOutputDir) {
+			fmt.Println("Item '" + item.Title + "' already downloaded, skipping")
 			continue
 		}
 
+		LogInfo("Downloading feed item '" + item.Title + "' to " + itemOutputDir)
 		InitOutputDirectory(itemOutputDir)
+
+		itemDetailsPath := itemOutputDir + "/details.json"
+		LogInfo("Writing details to " + itemDetailsPath)
 		WriteToFile(
-			itemOutputDir+"/details.json",
+			itemDetailsPath,
 			GrabFeedItemJSON(item))
+
+		itemImagePath := itemOutputDir + "/image" + filepath.Ext(item.Image.URL)
+		LogInfo("Downloading image to " + itemImagePath)
 		DownloadFile(
-			itemOutputDir+"/image"+filepath.Ext(item.Image.URL),
+			itemImagePath,
 			item.Image.URL)
+
 		for _, enclosure := range item.Enclosures {
+			LogInfo("Downloading attachment '" + filepath.Base(enclosure.URL) + "'")
 			DownloadFile(
 				itemOutputDir+"/"+filepath.Base(enclosure.URL),
 				enclosure.URL)
