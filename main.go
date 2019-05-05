@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	. "./fileio"
 	. "./helpers"
@@ -51,9 +52,10 @@ func main() {
 			item.Image.URL)
 
 		for _, enclosure := range item.Enclosures {
-			LogInfo("Downloading attachment '" + filepath.Base(enclosure.URL) + "'")
+			filename := strings.Split(filepath.Base(enclosure.URL), "?")[0]
+			LogInfo("Downloading attachment '" + filename + "'")
 			DownloadFile(
-				itemOutputDir+"/"+filepath.Base(enclosure.URL),
+				itemOutputDir+"/"+filename,
 				enclosure.URL)
 		}
 	}
