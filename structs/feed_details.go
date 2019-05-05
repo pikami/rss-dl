@@ -5,6 +5,7 @@ type FeedDetails struct {
 	Title       string
 	Description string
 	Link        string
+	FeedLink    string
 	Updated     string
 	Language    string
 	Categories  []string

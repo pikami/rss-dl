@@ -26,6 +26,9 @@ func main() {
 	LogInfo("Writing feed details as JSON to " + feedInfoPath)
 	WriteToFile(feedInfoPath, GrabFeedDetailsJSON(feed))
 
+	feedImagePath := outputDir + "/image" + filepath.Ext(feed.Image.URL)
+	DownloadFile(feedImagePath, feed.Image.URL)
+
 	for _, item := range feed.Items {
 		itemOutputFilename := ToCleanString(
 			item.PublishedParsed.Format("20060102") + "_" + item.Title)
@@ -69,6 +72,7 @@ func GrabFeedDetailsJSON(feed *gofeed.Feed) string {
 		Categories:  feed.Categories,
 		Language:    feed.Language,
 		Link:        feed.Link,
+		FeedLink:    feed.FeedLink,
 		Updated:     feed.Updated,
 	}
 
