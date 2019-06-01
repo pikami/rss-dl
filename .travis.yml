@@ -2,5 +2,6 @@ language: go
 matrix:
   include:
     - go: "1.11"
+      env: GO111MODULE=on
   install:
     - go get github.com/mmcdole/gofeed
