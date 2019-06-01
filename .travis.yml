@@ -1,0 +1,6 @@
+language: go
+matrix:
+  include:
+    - go: "1.11"
+  install:
+    - go get github.com/mmcdole/gofeed
