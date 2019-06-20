@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
-	"strings"
 
 	. "./fileio"
 	. "./helpers"
@@ -26,7 +25,7 @@ func main() {
 	LogInfo("Writing feed details as JSON to " + feedInfoPath)
 	WriteToFile(feedInfoPath, GrabFeedDetailsJSON(feed))
 
-	feedImagePath := outputDir + "/image" + filepath.Ext(feed.Image.URL)
+	feedImagePath := outputDir + "/image" + RemoveGetParams(filepath.Ext(feed.Image.URL))
 	DownloadFile(feedImagePath, feed.Image.URL)
 
 	for _, item := range feed.Items {
@@ -48,14 +47,14 @@ func main() {
 			itemDetailsPath,
 			GrabFeedItemJSON(item))
 
-		itemImagePath := itemOutputDir + "/image" + filepath.Ext(item.Image.URL)
+		itemImagePath := itemOutputDir + "/image" + RemoveGetParams(filepath.Ext(item.Image.URL))
 		LogInfo("Downloading image to " + itemImagePath)
 		DownloadFile(
 			itemImagePath,
 			item.Image.URL)
 
 		for _, enclosure := range item.Enclosures {
-			filename := strings.Split(filepath.Base(enclosure.URL), "?")[0]
+			filename := RemoveGetParams(filepath.Base(enclosure.URL))
 			LogInfo("Downloading attachment '" + filename + "'")
 			DownloadFile(
 				itemOutputDir+"/"+filename,
