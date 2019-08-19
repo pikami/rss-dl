@@ -47,11 +47,13 @@ func main() {
 			itemDetailsPath,
 			GrabFeedItemJSON(item))
 
-		itemImagePath := itemOutputDir + "/image" + RemoveGetParams(filepath.Ext(item.Image.URL))
-		LogInfo("Downloading image to " + itemImagePath)
-		DownloadFile(
-			itemImagePath,
-			item.Image.URL)
+		if item.Image != nil {
+			itemImagePath := itemOutputDir + "/image" + RemoveGetParams(filepath.Ext(item.Image.URL))
+			LogInfo("Downloading image to " + itemImagePath)
+			DownloadFile(
+				itemImagePath,
+				item.Image.URL)
+		}
 
 		for _, enclosure := range item.Enclosures {
 			filename := RemoveGetParams(filepath.Base(enclosure.URL))
