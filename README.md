@@ -1,6 +1,7 @@
 # RSS-DL
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/pikami/rss-dl)](https://goreportcard.com/report/github.com/pikami/rss-dl)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/pikami/rss-dl/rss-dl_CI)
 
 A simple rss feed downloader written in go
 
