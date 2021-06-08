@@ -10,11 +10,13 @@ import (
 var Config struct {
 	FeedURL    string
 	OutputPath string
+	ParseHtml  bool
 }
 
 // GetConfig - Returns Config object
 func GetConfig() {
 	outputPath := flag.String("output", ".", "Output path")
+	parseHtml := flag.Bool("parsehtml", false, "Save content as html")
 
 	flag.Parse()
 
@@ -26,4 +28,5 @@ func GetConfig() {
 
 	Config.FeedURL = flag.Args()[len(args)-1]
 	Config.OutputPath = *outputPath
+	Config.ParseHtml = *parseHtml
 }

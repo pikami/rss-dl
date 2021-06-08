@@ -11,6 +11,7 @@ You can download feeds by running `./rss-dl [Options] FEED_URL`
 
 ## Available options
 * `-output some_directory` - Output path (default ".")
+* `-parsehtml` - Save content as html
 
 ## Acknowledgments
 This software uses the gofeed parser which can be found here: https://github.com/mmcdole/gofeed

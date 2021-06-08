@@ -9,6 +9,7 @@ import (
 
 	fileio "github.com/pikami/rss-dl/fileio"
 	helpers "github.com/pikami/rss-dl/helpers"
+	htmlgrab "github.com/pikami/rss-dl/htmlgrab"
 	structs "github.com/pikami/rss-dl/structs"
 )
 
@@ -26,8 +27,10 @@ func main() {
 	helpers.LogInfo("Writing feed details as JSON to " + feedInfoPath)
 	fileio.WriteToFile(feedInfoPath, GrabFeedDetailsJSON(feed))
 
-	feedImagePath := outputDir + "/image" + helpers.RemoveGetParams(filepath.Ext(feed.Image.URL))
-	fileio.DownloadFile(feedImagePath, feed.Image.URL)
+	if feed.Image != nil {
+		feedImagePath := outputDir + "/image" + helpers.RemoveGetParams(filepath.Ext(feed.Image.URL))
+		fileio.DownloadFile(feedImagePath, feed.Image.URL)
+	}
 
 	for _, item := range feed.Items {
 		itemOutputFilename := helpers.ToCleanString(
@@ -62,6 +65,10 @@ func main() {
 			fileio.DownloadFile(
 				itemOutputDir+"/"+filename,
 				enclosure.URL)
+		}
+
+		if structs.Config.ParseHtml {
+			htmlgrab.HtmlGrab(item.Content, itemOutputDir)
 		}
 	}
 }
