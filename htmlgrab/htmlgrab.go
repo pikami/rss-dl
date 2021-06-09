@@ -30,14 +30,23 @@ func HtmlGrab(htmlStr string, itemOutputDir string) {
 		// For each item found, get the title
 		val, exists := s.Attr("src")
 		if exists {
-			imageName := helpers.RemoveGetParams(filepath.Base(val))
-			itemImagePath := outputDir + "/" + imageName
-			helpers.LogInfo("Downloading image to " + itemImagePath)
-			fileio.DownloadFile(
-				itemImagePath,
-				val)
+			imageName := "#"
+			if strings.Contains(val, "base64") {
+				imageName = fileio.SaveFromBase64(val, outputDir)
+			} else {
+				imageName = helpers.RemoveGetParams(filepath.Base(val))
+				itemImagePath := outputDir + "/" + imageName
+				helpers.LogInfo("Downloading image to " + itemImagePath)
+				err = fileio.DownloadFile(
+					itemImagePath,
+					val)
 
-			fmt.Printf("[htmlgrab] %d: %s\n", i, val)
+				if err != nil {
+					fmt.Printf("[htmlgrab] %d: failed to get %s\n", i, val)
+				} else {
+					fmt.Printf("[htmlgrab] %d: %s\n", i, val)
+				}
+			}
 
 			s.SetAttr("src", imageName)
 		}

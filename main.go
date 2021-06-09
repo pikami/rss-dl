@@ -29,7 +29,10 @@ func main() {
 
 	if feed.Image != nil {
 		feedImagePath := outputDir + "/image" + helpers.RemoveGetParams(filepath.Ext(feed.Image.URL))
-		fileio.DownloadFile(feedImagePath, feed.Image.URL)
+		err := fileio.DownloadFile(feedImagePath, feed.Image.URL)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	for _, item := range feed.Items {
@@ -54,17 +57,23 @@ func main() {
 		if item.Image != nil {
 			itemImagePath := itemOutputDir + "/image" + helpers.RemoveGetParams(filepath.Ext(item.Image.URL))
 			helpers.LogInfo("Downloading image to " + itemImagePath)
-			fileio.DownloadFile(
+			err := fileio.DownloadFile(
 				itemImagePath,
 				item.Image.URL)
+			if err != nil {
+				panic(err)
+			}
 		}
 
 		for _, enclosure := range item.Enclosures {
 			filename := helpers.RemoveGetParams(filepath.Base(enclosure.URL))
 			helpers.LogInfo("Downloading attachment '" + filename + "'")
-			fileio.DownloadFile(
+			err := fileio.DownloadFile(
 				itemOutputDir+"/"+filename,
 				enclosure.URL)
+			if err != nil {
+				panic(err)
+			}
 		}
 
 		if structs.Config.ParseHtml {

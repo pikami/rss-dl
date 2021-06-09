@@ -7,18 +7,18 @@ import (
 )
 
 // DownloadFile - Download file and store it
-func DownloadFile(outputFilename string, url string) {
+func DownloadFile(outputFilename string, url string) error {
 	// Get the data
 	resp, err := http.Get(url)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer resp.Body.Close()
 
 	// Create the file
 	out, err := os.Create(outputFilename)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer out.Close()
 
@@ -26,6 +26,8 @@ func DownloadFile(outputFilename string, url string) {
 	_, err = io.Copy(out, resp.Body)
 
 	if err != nil {
-		panic(err)
+		return err
 	}
+
+	return nil
 }
